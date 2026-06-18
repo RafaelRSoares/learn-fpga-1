@@ -1,0 +1,80 @@
+#-----------------------------------------------------------
+# Vivado v2023.1 (64-bit)
+# SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+# IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+# SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+# Start of session at: Mon Jun 15 16:53:25 2026
+# Process ID: 8076
+# Current directory: C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/project_1/project_1.runs/synth_1
+# Command line: vivado.exe -log femtosoc.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source femtosoc.tcl
+# Log file: C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/project_1/project_1.runs/synth_1/femtosoc.vds
+# Journal file: C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/project_1/project_1.runs/synth_1\vivado.jou
+# Running On: Beowulf-Noxus, OS: Windows, CPU Frequency: 2611 MHz, CPU Physical cores: 10, Host memory: 16873 MB
+#-----------------------------------------------------------
+source femtosoc.tcl -notrace
+create_project: Time (s): cpu = 00:00:32 ; elapsed = 00:00:42 . Memory (MB): peak = 444.645 ; gain = 164.359
+Command: read_checkpoint -auto_incremental -incremental C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/project_1/project_1.srcs/utils_1/imports/synth_1/femtosoc.dcp
+INFO: [Vivado 12-5825] Read reference checkpoint from C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/project_1/project_1.srcs/utils_1/imports/synth_1/femtosoc.dcp for incremental synthesis
+INFO: [Vivado 12-7989] Please ensure there are no constraint changes
+Command: synth_design -top femtosoc -part xc7z020clg400-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7z020'
+INFO: [Device 21-403] Loading part xc7z020clg400-1
+INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
+INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 26908
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:63]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:68]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:71]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:71]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:72]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:72]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:74]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:74]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:74]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:75]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:75]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:75]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:75]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:76]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:76]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:76]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:76]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:80]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:81]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:82]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:83]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:84]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:85]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:86]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:87]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:88]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:89]
+WARNING: [Synth 8-6901] identifier 'writeBack' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:104]
+WARNING: [Synth 8-6901] identifier 'writeBackData' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:106]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:144]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:144]
+WARNING: [Synth 8-6901] identifier 'funct3IsShift' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:150]
+WARNING: [Synth 8-6901] identifier 'instr' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:177]
+WARNING: [Synth 8-6901] identifier 'state' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:219]
+WARNING: [Synth 8-6901] identifier 'WAIT_INSTR_bit' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:219]
+WARNING: [Synth 8-6901] identifier 'state' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:219]
+WARNING: [Synth 8-6901] identifier 'FETCH_INSTR_bit' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:219]
+WARNING: [Synth 8-6901] identifier 'cycles' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:227]
+WARNING: [Synth 8-6901] identifier 'LOAD_data' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:232]
+WARNING: [Synth 8-6901] identifier 'LOAD_byte' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:254]
+WARNING: [Synth 8-6901] identifier 'LOAD_halfword' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:254]
+WARNING: [Synth 8-6901] identifier 'LOAD_byte' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:257]
+WARNING: [Synth 8-6901] identifier 'LOAD_halfword' is used before its declaration [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/PROCESSOR/femtorv32_quark.v:258]
+ERROR: [Synth 8-36] 'PC' is not declared [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/femtosoc.v:391]
+INFO: [Synth 8-10285] module 'femtosoc' is ignored due to previous errors [C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/femtosoc.v:617]
+INFO: [Synth 8-9084] Verilog file 'C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/femtosoc.v' ignored due to errors
+Failed to read verilog 'C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/RTL/femtosoc.v'
+INFO: [Common 17-83] Releasing license: Synthesis
+12 Infos, 43 Warnings, 0 Critical Warnings and 2 Errors encountered.
+synth_design failed
+ERROR: [Common 17-69] Command failed: Synthesis failed - please see the console or run log file for details
+INFO: [Common 17-206] Exiting Vivado at Mon Jun 15 16:55:01 2026...
