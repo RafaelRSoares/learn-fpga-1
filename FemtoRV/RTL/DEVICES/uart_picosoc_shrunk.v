@@ -26,19 +26,19 @@ module buart #(
   parameter FREQ_MHZ = 12,
   parameter BAUDS    = 115200
 ) (
-    input  wire       clk,
-    input  wire       resetq,
+    input clk,
+    input resetq,
 
-    output wire       tx,
-    input  wire       rx,
+    output tx,
+    input  rx,
 
-    input  wire       wr,
-    input  wire       rd,
-    input  wire [7:0] tx_data,
-    output wire [7:0] rx_data,
+    input  wr,
+    input  rd,
+    input  [7:0] tx_data,
+    output [7:0] rx_data,
 
-    output wire       busy,
-    output wire       valid
+    output busy,
+    output valid
 );
 
    /************** Baud frequency constants ******************/

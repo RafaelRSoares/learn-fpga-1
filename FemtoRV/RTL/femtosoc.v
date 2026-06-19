@@ -8,20 +8,20 @@
 /*************************************************************************************/
 
 
-`default_nettype none // Makes it easier to detect typos !
+`default_nettype wire
 
 `include "femtosoc_config.v"        // User configuration of processor and SOC.
-`include "PLL/femtopll.v"           // The PLL (generates clock at NRV_FREQ)
+// `include "PLL/femtopll.v"           // The PLL (generates clock at NRV_FREQ)
 
-//`include "DEVICES/uart.v"
-//`include "DEVICES/SSD1351_1331.v"
-//`include "DEVICES/MappedSPIFlash.v"
-//`include "DEVICES/MAX7219.v"
-`include "DEVICES/LEDs.v"
-//`include "DEVICES/SDCard.v"
-//`include "DEVICES/Buttons.v"
-//`include "DEVICES/FGA.v"
-`include "DEVICES/HardwareConfig.v"
+// `include "DEVICES/uart.v"           // The UART (serial port over USB)
+// `include "DEVICES/SSD1351_1331.v"   // The OLED display
+// `include "DEVICES/MappedSPIFlash.v" // Idem, but mapped in memory
+// `include "DEVICES/MAX7219.v"        // 8x8 led matrix driven by a MAX7219 chip
+`include "DEVICES/LEDs.v"           // Driver for 4 leds
+// `include "DEVICES/SDCard.v"         // Driver for SDCard (just for bitbanging for now)
+// `include "DEVICES/Buttons.v"        // Driver for the buttons
+// `include "DEVICES/FGA.v"            // Femto Graphic Adapter
+`include "DEVICES/HardwareConfig.v" // Constant registers to query hardware config.
 
 // The Ice40UP5K has ample quantities (128 KB) of single-ported RAM that can be
 // used as system RAM (but cannot be inferred, uses a special block).
@@ -49,47 +49,36 @@ module femtosoc(
    output wire D1,D2,D3,D4,D5,
  `endif
 `endif
+
 `ifdef NRV_IO_SSD1351_1331
    output wire oled_DIN, oled_CLK, oled_CS, oled_DC, oled_RST,
 `endif
+
 `ifdef NRV_IO_UART
    input  wire RXD,
    output wire TXD,
 `endif
+
 `ifdef NRV_IO_MAX7219
    output wire ledmtx_DIN, ledmtx_CS, ledmtx_CLK,
 `endif
+
 `ifdef NRV_SPI_FLASH
    inout wire spi_mosi, inout wire spi_miso, output wire spi_cs_n,
  `ifndef ULX3S
    output wire spi_clk,
  `endif
 `endif
+
 `ifdef NRV_IO_SDCARD
    output wire sd_mosi, input wire sd_miso, output wire sd_cs_n, output wire sd_clk,
 `endif
+
 `ifdef NRV_IO_BUTTONS
-   `ifdef ICE_FEATHER
-      input wire [3:0] buttons,
-   `else
-      input wire [5:0] buttons,
-   `endif
+   input wire [5:0] buttons,
 `endif
-`ifdef ULX3S
-   output wire wifi_en,
-`endif
+
    input wire RESET,
-`ifdef FOMU
-   output wire usb_dp, usb_dn, usb_dp_pu,
-`endif
-`ifdef NRV_IO_FGA
-   output wire [3:0] gpdi_dp,
-`endif
-`ifdef NRV_IO_IRDA
-   output wire irda_TXD,
-   input wire irda_RXD,
-   output wire irda_SD,
-`endif
    input wire pclk
 );
 
@@ -126,55 +115,60 @@ module femtosoc(
 
 wire clk;
 assign clk = pclk;
+
+// Reset temporário para debug na PYNQ-Z2.
+// Começa em 0, inicializa a CPU, depois vai para 1.
+reg [20:0] reset_cnt = 0;
+wire cpu_reset = &reset_cnt;
+
+always @(posedge clk) begin
+   if(!cpu_reset) begin
+      reset_cnt <= reset_cnt + 1'b1;
+   end
+end
    
-/*  femtoPLL #(
-    .freq(`NRV_FREQ)	     
-  ) pll(
-    .pclk(pclk), 
-    .clk(clk)
-  );
-*/
+//   femtoPLL #(
+//     .freq(`NRV_FREQ)	     
+//   ) pll(
+//     .pclk(pclk), 
+//     .clk(clk)
+//   );
 
   // A little delay for sending the reset signal after startup.
   // Explanation here: (ice40 BRAM reads incorrect values during
   // first cycles).
   // http://svn.clifford.at/handicraft/2017/ice40bramdelay/README
   // On the ICE40-UP5K, 4096 cycles do not suffice (-> 65536 cycles)
-`ifdef ICE_STICK
-  reg [11:0] reset_cnt = 0;   
-`else   
-  reg [15:0] reset_cnt = 0;
-`endif   
-  wire       reset = &reset_cnt;
 
-/* verilator lint_off WIDTH */  
-always @(posedge clk) begin
-   reset_cnt <= reset_cnt + !reset;
-end 
+  
+// `ifdef ICE_STICK
+//   reg [11:0] reset_cnt = 0;   
+// `else   
+//   reg [15:0] reset_cnt = 0;
+// `endif   
+//   wire       reset = &reset_cnt;
 
-/*`ifdef NRV_NEGATIVE_RESET
-   always @(posedge clk,negedge RESET) begin
-      if(!RESET) begin
-	 reset_cnt <= 0;
-      end else begin
-	 reset_cnt <= reset_cnt + !reset;
-      end
-   end
-
-`else
-   always @(posedge clk,posedge RESET) begin
-      if(RESET) begin
-	 reset_cnt <= 0;
-      end else begin
-	 reset_cnt <= reset_cnt + !reset;
-      end
-   end
-`endif
-*/
-
+// /* verilator lint_off WIDTH */   
+// `ifdef NRV_NEGATIVE_RESET
+//    always @(posedge clk,negedge RESET) begin
+//       if(!RESET) begin
+// 	 reset_cnt <= 0;
+//       end else begin
+// 	 reset_cnt <= reset_cnt + !reset;
+//       end
+//    end
+// `else
+//    always @(posedge clk,posedge RESET) begin
+//       if(RESET) begin
+// 	 reset_cnt <= 0;
+//       end else begin
+// 	 reset_cnt <= reset_cnt + !reset;
+//       end
+//    end
+// `endif
 /* verilator lint_on WIDTH */   
    
-/***************************************************************************************************/
+/***************************************************************************************************
 /*
  * Memory and memory interface
  * memory map:
@@ -270,7 +264,7 @@ end
    // The hex file is generated by the bundled elf-2-verilog converter (see TOOLS/FIRMWARE_WORDS_SRC)
 `ifndef NRV_RUN_FROM_SPI_FLASH  
    initial begin
-      $readmemh("C:/Users/rafas/learn-fpga/learn-fpga/FemtoRV/FIRMWARE/firmware.hex", RAM);
+      $readmemh("C:/fpga/learn-fpga-clean/FemtoRV/FIRMWARE/firmware.hex", RAM);
    end
 `endif
 
@@ -318,7 +312,7 @@ end
    assign mem_rdata = mem_address_is_io ? io_rdata : ram_rdata;
 `endif   
    
-/***************************************************************************************************/
+/***************************************************************************************************
 /*
  * Memory-mapped IO
  * Mapped IO uses "one-hot" addressing, to make decoder
@@ -378,21 +372,35 @@ HardwareConfig hwconfig(
 /*********************** Four LEDs ************************/
 `ifdef NRV_IO_LEDS
    wire [31:0] leds_rdata;
+
    LEDDriver leds(
-`ifdef NRV_IO_IRDA
-      .irda_TXD(irda_TXD),
-      .irda_RXD(irda_RXD),
-      .irda_SD(irda_SD),		
-`endif		  
       .clk(clk),
-      .rstrb(io_rstrb),		  
-      .wstrb(io_wstrb),			
+      .rstrb(io_rstrb),
+      .wstrb(io_wstrb),
       .sel(io_word_address[IO_LEDS_bit]),
-      .wdata(io_wdata),		  
+      .wdata(io_wdata),
       .rdata(leds_rdata),
       .LED({D4,D3,D2,D1})
    );
 `endif
+
+// `ifdef NRV_IO_LEDS
+//    wire [31:0] leds_rdata;
+//    LEDDriver leds(
+// `ifdef NRV_IO_IRDA
+//       .irda_TXD(irda_TXD),
+//       .irda_RXD(irda_RXD),
+//       .irda_SD(irda_SD),		
+// `endif		  
+//       .clk(clk),
+//       .rstrb(io_rstrb),		  
+//       .wstrb(io_wstrb),			
+//       .sel(io_word_address[IO_LEDS_bit]),
+//       .wdata(io_wdata),		  
+//       .rdata(leds_rdata),
+//       .LED({D4,D3,D2,D1})
+//    );
+// `endif
 
 /********************** SSD1351/SSD1331 oled display ******/
 `ifdef NRV_IO_SSD1351_1331
@@ -590,11 +598,13 @@ end
 `ifdef NRV_INTERRUPTS
     .interrupt_request(1'b0),	      
 `endif     
-    .reset(reset && !uart_brk)
+    .reset(cpu_reset && !uart_brk)
   );
 
 `ifdef NRV_IO_LEDS  
-   assign D5 = error;
+   //assign D5 = error;
+   assign D5 = cpu_reset;
+
  `ifdef FOMU
     SB_RGBA_DRV #(
         .CURRENT_MODE("0b1"),       // half current
