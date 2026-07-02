@@ -339,6 +339,11 @@ localparam IO_RF_ADDR_bit = 12;
 localparam IO_RF_DATA_bit = 13;
 `endif
 
+`ifdef NRV_IO_DEBUG_REGS
+localparam IO_DBG_ADDR_bit = 14;
+localparam IO_DBG_DATA_bit = 15;
+`endif
+
 /*
  * Devices are components plugged to the IO memory bus.
  * A few words follow in case you want to write your own devices:
@@ -548,23 +553,88 @@ HardwareConfig hwconfig(
 
 `endif
 
-// `ifdef NRV_IO_LEDS
-//    wire [31:0] leds_rdata;
-//    LEDDriver leds(
-// `ifdef NRV_IO_IRDA
-//       .irda_TXD(irda_TXD),
-//       .irda_RXD(irda_RXD),
-//       .irda_SD(irda_SD),		
-// `endif		  
-//       .clk(clk),
-//       .rstrb(io_rstrb),		  
-//       .wstrb(io_wstrb),			
-//       .sel(io_word_address[IO_LEDS_bit]),
-//       .wdata(io_wdata),		  
-//       .rdata(leds_rdata),
-//       .LED({D4,D3,D2,D1})
-//    );
-// `endif
+
+/*********************** Debug registers for ILA ***********************/
+`ifdef NRV_IO_DEBUG_REGS
+
+   localparam DBG_REG_SAMPLE   = 4'd0;
+   localparam DBG_REG_EXPECTED = 4'd1;
+   localparam DBG_REG_PRED     = 4'd2;
+   localparam DBG_REG_CYCLES   = 4'd3;
+   localparam DBG_REG_CORRECT  = 4'd4;
+
+   reg [3:0] dbg_reg_sel = 0;
+
+   reg [31:0] dbg_sample   = 0;
+   reg [31:0] dbg_expected = 0;
+   reg [31:0] dbg_pred     = 0;
+   reg [31:0] dbg_cycles   = 0;
+   reg [31:0] dbg_correct  = 0;
+
+   reg dbg_pulse = 0;
+
+   always @(posedge clk) begin
+      dbg_pulse <= 1'b0;
+
+      if(!reset) begin
+         dbg_reg_sel <= 0;
+         dbg_sample <= 0;
+         dbg_expected <= 0;
+         dbg_pred <= 0;
+         dbg_cycles <= 0;
+         dbg_correct <= 0;
+      end else begin
+         if(io_wstrb && io_word_address[IO_DBG_ADDR_bit]) begin
+            dbg_reg_sel <= io_wdata[3:0];
+         end
+
+         if(io_wstrb && io_word_address[IO_DBG_DATA_bit]) begin
+            case(dbg_reg_sel)
+               DBG_REG_SAMPLE:   dbg_sample   <= io_wdata;
+               DBG_REG_EXPECTED: dbg_expected <= io_wdata;
+               DBG_REG_PRED:     dbg_pred     <= io_wdata;
+               DBG_REG_CYCLES: begin
+                  dbg_cycles <= io_wdata;
+                  dbg_pulse <= 1'b1;
+               end
+               DBG_REG_CORRECT:  dbg_correct  <= io_wdata;
+            endcase
+         end
+      end
+   end
+
+   reg [31:0] dbg_rdata_raw;
+
+   always @(*) begin
+      case(dbg_reg_sel)
+         DBG_REG_SAMPLE:   dbg_rdata_raw = dbg_sample;
+         DBG_REG_EXPECTED: dbg_rdata_raw = dbg_expected;
+         DBG_REG_PRED:     dbg_rdata_raw = dbg_pred;
+         DBG_REG_CYCLES:   dbg_rdata_raw = dbg_cycles;
+         DBG_REG_CORRECT:  dbg_rdata_raw = dbg_correct;
+         default:          dbg_rdata_raw = 32'b0;
+      endcase
+   end
+
+   wire [31:0] dbg_rdata =
+      io_word_address[IO_DBG_DATA_bit] ? dbg_rdata_raw : 32'b0;
+
+`endif
+
+`ifdef NRV_IO_DEBUG_REGS
+
+   ila_0 rf_debug_ila (
+      .clk(clk),
+      .probe0(dbg_sample),
+      .probe1(dbg_expected),
+      .probe2(dbg_pred),
+      .probe3(dbg_cycles),
+      .probe4(dbg_correct),
+      .probe5(dbg_pulse),
+      .probe6(custom_funct3)
+   );
+
+`endif
 
 /********************** SSD1351/SSD1331 oled display ******/
 `ifdef NRV_IO_SSD1351_1331
@@ -711,6 +781,9 @@ always @(posedge clk) begin
 `endif
 `ifdef NRV_IO_RANDOM_FOREST
             | rf_rdata
+`endif
+`ifdef NRV_IO_DEBUG_REGS
+            | dbg_rdata
 `endif
 `ifdef NRV_IO_UART
 	    | uart_rdata
