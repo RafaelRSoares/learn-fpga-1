@@ -45,6 +45,12 @@ module FemtoRV32(
    input 	 mem_rbusy, // asserted if memory is busy reading value
    input 	 mem_wbusy, // asserted if memory is busy writing value
 
+   input [31:0] custom_rdata,
+   output       custom_valid,
+   output [2:0] custom_funct3,
+   output [31:0] custom_rs1,
+   output [31:0] custom_rs2,
+
    input 	 reset      // set to 0 to reset the processor
 );
 
@@ -76,17 +82,24 @@ module FemtoRV32(
  wire [31:0] Jimm = {{12{instr[31]}}, instr[19:12],instr[20],instr[30:21],1'b0};
  /* verilator lint_on UNUSED */
 
-   // Base RISC-V (RV32I) has only 10 different instructions !
-   wire isLoad    =  (instr[6:2] == 5'b00000); // rd <- mem[rs1+Iimm]
-   wire isALUimm  =  (instr[6:2] == 5'b00100); // rd <- rs1 OP Iimm
-   wire isStore   =  (instr[6:2] == 5'b01000); // mem[rs1+Simm] <- rs2
-   wire isALUreg  =  (instr[6:2] == 5'b01100); // rd <- rs1 OP rs2
-   wire isSYSTEM  =  (instr[6:2] == 5'b11100); // rd <- cycles
-   wire isJAL     =  instr[3]; // (instr[6:2] == 5'b11011); // rd <- PC+4; PC<-PC+Jimm
-   wire isJALR    =  (instr[6:2] == 5'b11001); // rd <- PC+4; PC<-rs1+Iimm
-   wire isLUI     =  (instr[6:2] == 5'b01101); // rd <- Uimm
-   wire isAUIPC   =  (instr[6:2] == 5'b00101); // rd <- PC + Uimm
-   wire isBranch  =  (instr[6:2] == 5'b11000); // if(rs1 OP rs2) PC<-PC+Bimm
+   wire isLoad    =  (instr[6:2] == 5'b00000);
+   wire isALUimm  =  (instr[6:2] == 5'b00100);
+   wire isStore   =  (instr[6:2] == 5'b01000);
+   wire isALUreg  =  (instr[6:2] == 5'b01100);
+   wire isSYSTEM  =  (instr[6:2] == 5'b11100);
+
+   // Antes era "instr[3]", mas isso atrapalha opcode customizado.
+   // Agora JAL é reconhecido pelo opcode correto.
+   wire isJAL     =  (instr[6:2] == 5'b11011);
+
+   wire isJALR    =  (instr[6:2] == 5'b11001);
+   wire isLUI     =  (instr[6:2] == 5'b01101);
+   wire isAUIPC   =  (instr[6:2] == 5'b00101);
+   wire isBranch  =  (instr[6:2] == 5'b11000);
+
+   // Opcode custom-0 RISC-V: 0001011.
+   // Como o Quark ignora bits [1:0], detectamos por instr[6:2] = 00010.
+   wire isCUSTOM0 =  (instr[6:2] == 5'b00010);
 
    wire isALU = isALUimm | isALUreg;
 
@@ -223,14 +236,15 @@ module FemtoRV32(
    // The value written back to the register file.
    /***************************************************************************/
 
-   wire [31:0] writeBackData  =
-      (isSYSTEM            ? cycles     : 32'b0) |  // SYSTEM
-      (isLUI               ? Uimm       : 32'b0) |  // LUI
-      (isALU               ? aluOut     : 32'b0) |  // ALUreg, ALUimm
-      (isAUIPC             ? PCplusImm  : 32'b0) |  // AUIPC
-      (isJALR   | isJAL    ? PCplus4    : 32'b0) |  // JAL, JALR
-      (isLoad              ? LOAD_data  : 32'b0) ;  // Load
-      
+wire [31:0] writeBackData  =
+   (isSYSTEM            ? cycles       : 32'b0) |
+   (isLUI               ? Uimm         : 32'b0) |
+   (isALU               ? aluOut       : 32'b0) |
+   (isAUIPC             ? PCplusImm    : 32'b0) |
+   (isJALR   | isJAL    ? PCplus4      : 32'b0) |
+   (isLoad              ? LOAD_data    : 32'b0) |
+   (isCUSTOM0           ? custom_rdata : 32'b0) ;
+         
    /* verilator lint_on WIDTH */
 
 
@@ -322,6 +336,11 @@ module FemtoRV32(
 
    // aluWr starts computation (shifts) in the ALU.
    assign aluWr = state[EXECUTE_bit] & isALU;
+
+   assign custom_valid  = state[EXECUTE_bit] & isCUSTOM0;
+   assign custom_funct3 = instr[14:12];
+   assign custom_rs1 = rs1;
+   assign custom_rs2 = rs2;
 
    wire jumpToPCplusImm = isJAL | (isBranch & predicate);
 `ifdef NRV_IS_IO_ADDR

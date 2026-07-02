@@ -2,10 +2,11 @@
 
 `define NRV_IO_LEDS
 `define NRV_IO_HARDWARE_CONFIG
+`define NRV_IO_RANDOM_FOREST
 
 `define NRV_FEMTORV32_QUARK
 
-`define NRV_FREQ 125
+`define NRV_FREQ 50
 `define NRV_RAM 65536
 `define NRV_RESET_ADDR 0
 `define NRV_ADDR_WIDTH 24
