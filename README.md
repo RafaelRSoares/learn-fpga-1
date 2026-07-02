@@ -1,5 +1,13 @@
+# All credit goes to Bruno Levy for his incredible work on making a tutorial explaining and teaching the use of FPGA and RISC-V
+
+## This is merely a fork of Bruno's repository, focused on implementation of a riscv soc on a pynq-z2 board, and running a random forest on it
+
+### Please first check out Bruno's repository (https://github.com/BrunoLevy/learn-fpga) for a more complete understanding of the matter, as this one is focused on running the soc on the pynq board and later running a random forest for the purpose of analizyng the timing and other measurements
+
+
+
 # learn-fpga 
-_Learning FPGA, yosys, nextpnr, and RISC-V_ 
+_Learning FPGA and RISC-V_ 
 
 Mission statement: create teaching material for FPGAs, processor design and RISC-V, using around $40 per students.
 
@@ -19,25 +27,6 @@ SDCard. Its most basic configuration fits on the Lattice IceStick (<
 programming.
 
 
-Playing with LiteX: plug-and-play system to assemble SOCs
----------------------------------------------------------
-The repository includes [LiteX examples](LiteX/README.md).
-The [LiteX](https://github.com/enjoy-digital/litex) framework 
-is a well designed and an easy-to-use framework to create SoCs. 
-It lets you create a SoC by assembling components (processor, 
-SDRAM controller, SDCard controller, USB, ...) in Python.
-FemtoRV is directly supported by LiteX (that directly downloads
-it from this repository when selected as the SoC's processor). 
-
-From Blinky to RISC-V
----------------------
-In [Episode I](https://github.com/BrunoLevy/learn-fpga/blob/master/FemtoRV/TUTORIALS/FROM_BLINKER_TO_RISCV/README.md),
-you will learn to build your own RISC-V processor, step by step,
-starting from the simplest design (that blinks a LED), to a fully
-functional RISC-V core that can compute and display graphics.
-
-In [Episode II](https://github.com/BrunoLevy/learn-fpga/blob/master/FemtoRV/TUTORIALS/FROM_BLINKER_TO_RISCV/PIPELINE.md),
-you will learn how to design a pipelined processor.
 
 Links - Other FPGA resources
 ----------------------------
@@ -56,15 +45,3 @@ Links - Other FPGA resources
 - [Will Green's project F](https://github.com/projf/projf-explore) tutorials with nice graphics effects
 - [fpga4fun](https://www.fpga4fun.com/) learned there how to create VGA graphics
 - [CoreScore](https://corescore.store/) how many cores can you fit on a FPGA ?
-
-Basic: more basic things I wrote during May 2020 - June 2020  
-------------------------------------------------------------
-Files are [here](https://github.com/BrunoLevy/learn-fpga/tree/master/Basic).
-This includes:
-- Blinker: the "hello world" program
-- LedMatrix: play with a 8x8 let matrix, driven by a MAX7219 IC. 
-- OLed: play with a SSD1351 OLed display, driven by a 4-wire SPI protocol.
-- Serial: access the included USB-virtual UART pins
-- LedTerminal: display scrolling messages on the LED matrix, obtained from the USB virtual UART
-- FOMU: simple examples for the "FPGA in a USB dongle", including the FrankenVGA experiment !
-- ULX3S HDMI: simple self-contained heavily commented HDMI example.
