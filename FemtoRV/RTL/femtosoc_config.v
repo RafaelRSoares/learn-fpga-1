@@ -2,8 +2,6 @@
 
 `define NRV_IO_LEDS
 `define NRV_IO_HARDWARE_CONFIG
-`define NRV_IO_RANDOM_FOREST
-`define NRV_IO_DEBUG_REGS
 
 `define NRV_FEMTORV32_QUARK
 

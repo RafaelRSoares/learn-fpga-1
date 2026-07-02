@@ -78,10 +78,6 @@ module femtosoc(
    input wire [5:0] buttons,
 `endif
 
-// `ifdef NRV_IO_RANDOM_FOREST
-// `include "PROCESSOR/random_forest.v"
-// `endif
-
    input wire RESET,
    input wire pclk
 );
@@ -334,16 +330,6 @@ end
 
 `include "DEVICES/HardwareConfig_bits.v"   
 
-`ifdef NRV_IO_RANDOM_FOREST
-localparam IO_RF_ADDR_bit = 12;
-localparam IO_RF_DATA_bit = 13;
-`endif
-
-`ifdef NRV_IO_DEBUG_REGS
-localparam IO_DBG_ADDR_bit = 14;
-localparam IO_DBG_DATA_bit = 15;
-`endif
-
 /*
  * Devices are components plugged to the IO memory bus.
  * A few words follow in case you want to write your own devices:
@@ -404,237 +390,23 @@ HardwareConfig hwconfig(
    );
 `endif
 
-/*********************** Random Forest MMIO ***********************/
-`ifdef NRV_IO_RANDOM_FOREST
-
-   localparam RF_REG_STATUS = 4'd0;
-   localparam RF_REG_RESULT = 4'd1;
-   localparam RF_REG_FEAT0  = 4'd2;
-   localparam RF_REG_FEAT1  = 4'd3;
-   localparam RF_REG_FEAT2  = 4'd4;
-   localparam RF_REG_FEAT3  = 4'd5;
-   localparam RF_REG_TADDR  = 4'd6;
-   localparam RF_REG_TMEM   = 4'd7;
-   localparam RF_REG_START  = 4'd8;
-
-   reg [3:0] rf_reg_sel = 0;
-
-   reg [31:0] rf_feat0 = 0;
-   reg [31:0] rf_feat1 = 0;
-   reg [31:0] rf_feat2 = 0;
-   reg [31:0] rf_feat3 = 0;
-
-   reg [7:0] rf_tree_addr = 0;
-   reg rf_start_pulse = 0;
-
-   wire rf_ready;
-   wire [31:0] rf_result;
-   wire [31:0] rf_rdata;
-
-   wire custom_rf_start;
-   wire custom_rf_feat0;
-   wire custom_rf_feat1;
-   wire custom_rf_feat2;
-   wire custom_rf_feat3;
-   wire custom_rf_tmem;
-
-   assign custom_rf_start = custom_valid && (custom_funct3 == 3'b010);
-   assign custom_rf_feat0 = custom_valid && (custom_funct3 == 3'b011);
-   assign custom_rf_feat1 = custom_valid && (custom_funct3 == 3'b100);
-   assign custom_rf_feat2 = custom_valid && (custom_funct3 == 3'b101);
-   assign custom_rf_feat3 = custom_valid && (custom_funct3 == 3'b110);
-   assign custom_rf_tmem  = custom_valid && (custom_funct3 == 3'b111);
-
-   assign custom_rdata =
-      (custom_funct3 == 3'b001) ? {31'b0, rf_ready} :
-                                 rf_result;
-
-   wire rf_tree_we;
-   wire [31:0] rf_tree_data_in;
-   wire [7:0]  rf_tree_addr_mux;
-
-   assign rf_tree_we =
-      (
-         io_wstrb &&
-         io_word_address[IO_RF_DATA_bit] &&
-         (rf_reg_sel == RF_REG_TMEM)
-      ) || custom_rf_tmem;
-
-   assign rf_tree_data_in =
-      custom_rf_tmem ? custom_rs2 : io_wdata;
-
-   assign rf_tree_addr_mux =
-      custom_rf_tmem ? custom_rs1[7:0] : rf_tree_addr;
-
-   always @(posedge clk) begin
-      rf_start_pulse <= 1'b0;
-
-      if(!reset) begin
-         rf_reg_sel <= 0;
-         rf_feat0 <= 0;
-         rf_feat1 <= 0;
-         rf_feat2 <= 0;
-         rf_feat3 <= 0;
-         rf_tree_addr <= 0;
-      end else begin
-         if(io_wstrb && io_word_address[IO_RF_ADDR_bit]) begin
-            rf_reg_sel <= io_wdata[3:0];
-         end
-
-         if(io_wstrb && io_word_address[IO_RF_DATA_bit]) begin
-            case(rf_reg_sel)
-               RF_REG_FEAT0: rf_feat0 <= io_wdata;
-               RF_REG_FEAT1: rf_feat1 <= io_wdata;
-               RF_REG_FEAT2: rf_feat2 <= io_wdata;
-               RF_REG_FEAT3: rf_feat3 <= io_wdata;
-               RF_REG_TADDR: rf_tree_addr <= io_wdata[7:0];
-               RF_REG_START: rf_start_pulse <= 1'b1;
-            endcase
-         end
-
-         if(custom_rf_feat0) begin
-            rf_feat0 <= custom_rs1;
-         end
-
-         if(custom_rf_feat1) begin
-            rf_feat1 <= custom_rs1;
-         end
-
-         if(custom_rf_feat2) begin
-            rf_feat2 <= custom_rs1;
-         end
-
-         if(custom_rf_feat3) begin
-            rf_feat3 <= custom_rs1;
-         end
-
-         if(custom_rf_start) begin
-            rf_start_pulse <= 1'b1;
-         end
-      end
-   end
-
-   reg [31:0] rf_rdata_raw;
-
-   always @(*) begin
-      case(rf_reg_sel)
-         RF_REG_STATUS: rf_rdata_raw = {31'b0, rf_ready};
-         RF_REG_RESULT: rf_rdata_raw = rf_result;
-         RF_REG_FEAT0:  rf_rdata_raw = rf_feat0;
-         RF_REG_FEAT1:  rf_rdata_raw = rf_feat1;
-         RF_REG_FEAT2:  rf_rdata_raw = rf_feat2;
-         RF_REG_FEAT3:  rf_rdata_raw = rf_feat3;
-         RF_REG_TADDR:  rf_rdata_raw = {24'b0, rf_tree_addr};
-         default:       rf_rdata_raw = 32'b0;
-      endcase
-   end
-
-   assign rf_rdata =
-      io_word_address[IO_RF_DATA_bit] ? rf_rdata_raw : 32'b0;
-
-   random_forest rf_engine (
-      .clk(clk),
-      .reset(!reset),
-
-      .instruction(32'b0),
-      .x1(rf_feat0),
-      .x2(rf_feat1),
-      .x3(rf_feat2),
-      .x4(rf_feat3),
-
-      .start(rf_start_pulse),
-      .ready(rf_ready),
-      .result(rf_result),
-
-      .tree_data_in(rf_tree_data_in),
-      .tree_addr(rf_tree_addr_mux),
-      .tree_we(rf_tree_we)
-   );
-
-`endif
-
-
-/*********************** Debug registers for ILA ***********************/
-`ifdef NRV_IO_DEBUG_REGS
-
-   localparam DBG_REG_SAMPLE   = 4'd0;
-   localparam DBG_REG_EXPECTED = 4'd1;
-   localparam DBG_REG_PRED     = 4'd2;
-   localparam DBG_REG_CYCLES   = 4'd3;
-   localparam DBG_REG_CORRECT  = 4'd4;
-
-   reg [3:0] dbg_reg_sel = 0;
-
-   reg [31:0] dbg_sample   = 0;
-   reg [31:0] dbg_expected = 0;
-   reg [31:0] dbg_pred     = 0;
-   reg [31:0] dbg_cycles   = 0;
-   reg [31:0] dbg_correct  = 0;
-
-   reg dbg_pulse = 0;
-
-   always @(posedge clk) begin
-      dbg_pulse <= 1'b0;
-
-      if(!reset) begin
-         dbg_reg_sel <= 0;
-         dbg_sample <= 0;
-         dbg_expected <= 0;
-         dbg_pred <= 0;
-         dbg_cycles <= 0;
-         dbg_correct <= 0;
-      end else begin
-         if(io_wstrb && io_word_address[IO_DBG_ADDR_bit]) begin
-            dbg_reg_sel <= io_wdata[3:0];
-         end
-
-         if(io_wstrb && io_word_address[IO_DBG_DATA_bit]) begin
-            case(dbg_reg_sel)
-               DBG_REG_SAMPLE:   dbg_sample   <= io_wdata;
-               DBG_REG_EXPECTED: dbg_expected <= io_wdata;
-               DBG_REG_PRED:     dbg_pred     <= io_wdata;
-               DBG_REG_CYCLES: begin
-                  dbg_cycles <= io_wdata;
-                  dbg_pulse <= 1'b1;
-               end
-               DBG_REG_CORRECT:  dbg_correct  <= io_wdata;
-            endcase
-         end
-      end
-   end
-
-   reg [31:0] dbg_rdata_raw;
-
-   always @(*) begin
-      case(dbg_reg_sel)
-         DBG_REG_SAMPLE:   dbg_rdata_raw = dbg_sample;
-         DBG_REG_EXPECTED: dbg_rdata_raw = dbg_expected;
-         DBG_REG_PRED:     dbg_rdata_raw = dbg_pred;
-         DBG_REG_CYCLES:   dbg_rdata_raw = dbg_cycles;
-         DBG_REG_CORRECT:  dbg_rdata_raw = dbg_correct;
-         default:          dbg_rdata_raw = 32'b0;
-      endcase
-   end
-
-   wire [31:0] dbg_rdata =
-      io_word_address[IO_DBG_DATA_bit] ? dbg_rdata_raw : 32'b0;
-
-`endif
-
-`ifdef NRV_IO_DEBUG_REGS
-
-   ila_0 rf_debug_ila (
-      .clk(clk),
-      .probe0(dbg_sample),
-      .probe1(dbg_expected),
-      .probe2(dbg_pred),
-      .probe3(dbg_cycles),
-      .probe4(dbg_correct),
-      .probe5(dbg_pulse),
-      .probe6(custom_funct3)
-   );
-
-`endif
+// `ifdef NRV_IO_LEDS
+//    wire [31:0] leds_rdata;
+//    LEDDriver leds(
+// `ifdef NRV_IO_IRDA
+//       .irda_TXD(irda_TXD),
+//       .irda_RXD(irda_RXD),
+//       .irda_SD(irda_SD),		
+// `endif		  
+//       .clk(clk),
+//       .rstrb(io_rstrb),		  
+//       .wstrb(io_wstrb),			
+//       .sel(io_word_address[IO_LEDS_bit]),
+//       .wdata(io_wdata),		  
+//       .rdata(leds_rdata),
+//       .LED({D4,D3,D2,D1})
+//    );
+// `endif
 
 /********************** SSD1351/SSD1331 oled display ******/
 `ifdef NRV_IO_SSD1351_1331
@@ -779,12 +551,6 @@ always @(posedge clk) begin
 `ifdef NRV_IO_LEDS      
 	    | leds_rdata
 `endif
-`ifdef NRV_IO_RANDOM_FOREST
-            | rf_rdata
-`endif
-`ifdef NRV_IO_DEBUG_REGS
-            | dbg_rdata
-`endif
 `ifdef NRV_IO_UART
 	    | uart_rdata
 `endif	    
@@ -819,13 +585,7 @@ end
 
 /****************************************************************/
 /* And last but not least, the processor                        */
-
-   wire [31:0] custom_rdata;
-   wire        custom_valid;
-   wire [2:0]  custom_funct3;
-   wire [31:0] custom_rs1;
-   wire [31:0] custom_rs2;
-
+   
   reg error=1'b0;
 
    
@@ -841,12 +601,6 @@ end
     .mem_rstrb(mem_rstrb),
     .mem_rbusy(mem_rbusy),
     .mem_wbusy(mem_wbusy),
-    .custom_rdata(custom_rdata),
-    .custom_valid(custom_valid),
-    .custom_funct3(custom_funct3),
-    .custom_rs1(custom_rs1),
-    .custom_rs2(custom_rs2),
-
 `ifdef NRV_INTERRUPTS
     .interrupt_request(1'b0),	      
 `endif     
