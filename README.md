@@ -1,3 +1,9 @@
+# All credit goes to Bruno Levy for his incredible work on making a tutorial explaining and teaching the use of FPGA and RISC-V
+
+## This is merely a fork of Bruno's repository, focused on implementation of a riscv soc on a pynq-z2 board, and running a random forest on it
+
+
+
 # learn-fpga 
 _Learning FPGA, yosys, nextpnr, and RISC-V_ 
 
