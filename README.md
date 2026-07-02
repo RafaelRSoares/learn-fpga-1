@@ -46,7 +46,7 @@ Links - Other FPGA resources
 - [fpga4fun](https://www.fpga4fun.com/) learned there how to create VGA graphics
 - [CoreScore](https://corescore.store/) how many cores can you fit on a FPGA ?
 
-Basic: more basic things I wrote during May 2020 - June 2020  
+Basic: more basic things Bruno wrote during May 2020 - June 2020  
 ------------------------------------------------------------
 Files are [here](https://github.com/BrunoLevy/learn-fpga/tree/master/Basic).
 This includes:
