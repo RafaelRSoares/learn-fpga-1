@@ -1,4 +1,4 @@
-# All credit to Bruno Levy for his incredible tutorial on FPGA nad RISC-V
+# All credit to Bruno Levy for his incredible tutorial on FPGA and RISC-V
 ## This is merely a fork from his repositorym=, with focus on running a Random Forest on riscv on a pynq-z2 board, since i couldn't find anyone who did this and documented the process
 
 
