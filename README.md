@@ -45,3 +45,15 @@ Links - Other FPGA resources
 - [Will Green's project F](https://github.com/projf/projf-explore) tutorials with nice graphics effects
 - [fpga4fun](https://www.fpga4fun.com/) learned there how to create VGA graphics
 - [CoreScore](https://corescore.store/) how many cores can you fit on a FPGA ?
+
+Basic: more basic things I wrote during May 2020 - June 2020  
+------------------------------------------------------------
+Files are [here](https://github.com/BrunoLevy/learn-fpga/tree/master/Basic).
+This includes:
+- Blinker: the "hello world" program
+- LedMatrix: play with a 8x8 let matrix, driven by a MAX7219 IC. 
+- OLed: play with a SSD1351 OLed display, driven by a 4-wire SPI protocol.
+- Serial: access the included USB-virtual UART pins
+- LedTerminal: display scrolling messages on the LED matrix, obtained from the USB virtual UART
+- FOMU: simple examples for the "FPGA in a USB dongle", including the FrankenVGA experiment !
+- ULX3S HDMI: simple self-contained heavily commented HDMI example.
