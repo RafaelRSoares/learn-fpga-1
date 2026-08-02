@@ -1,0 +1,21 @@
+Acurácia scikit-learn: 0.680473
+Acurácia votação ROAR: 0.633136
+Diferenças entre regras: 10/169
+
+Relatório da votação ROAR:
+              precision    recall  f1-score   support
+
+         van     0.6441    0.9500    0.7677        40
+        saab     0.5417    0.2955    0.3824        44
+         bus     0.7692    0.9302    0.8421        43
+        opel     0.4706    0.3810    0.4211        42
+
+    accuracy                         0.6331       169
+   macro avg     0.6064    0.6392    0.6033       169
+weighted avg     0.6061    0.6331    0.6001       169
+
+Matriz de confusão:
+[[38  0  1  1]
+ [ 7 13  7 17]
+ [ 3  0 40  0]
+ [11 11  4 16]]

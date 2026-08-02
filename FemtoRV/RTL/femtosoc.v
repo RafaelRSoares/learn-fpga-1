@@ -178,7 +178,6 @@ end
 // `endif
 /* verilator lint_on WIDTH */   
    
-/***************************************************************************************************
 /*
  * Memory and memory interface
  * memory map:
@@ -322,15 +321,6 @@ end
    assign mem_rdata = mem_address_is_io ? io_rdata : ram_rdata;
 `endif   
    
-/***************************************************************************************************
-/*
- * Memory-mapped IO
- * Mapped IO uses "one-hot" addressing, to make decoder
- * simpler (saves a lot of LUTs), as in J1/swapforth,
- * thanks to Matthias Koch(Mecrisp author) for the idea !
- * The included files contains the symbolic constants that
- * determine which device uses which bit.
- */  
 
 `include "DEVICES/HardwareConfig_bits.v"   
 
@@ -409,20 +399,15 @@ HardwareConfig hwconfig(
 
    localparam RF_REG_STATUS = 4'd0;
    localparam RF_REG_RESULT = 4'd1;
-   localparam RF_REG_FEAT0  = 4'd2;
-   localparam RF_REG_FEAT1  = 4'd3;
-   localparam RF_REG_FEAT2  = 4'd4;
-   localparam RF_REG_FEAT3  = 4'd5;
+   localparam RF_REG_FADDR  = 4'd2;
+   localparam RF_REG_FDATA  = 4'd3;
    localparam RF_REG_TADDR  = 4'd6;
    localparam RF_REG_TMEM   = 4'd7;
    localparam RF_REG_START  = 4'd8;
 
    reg [3:0] rf_reg_sel = 0;
 
-   reg [31:0] rf_feat0 = 0;
-   reg [31:0] rf_feat1 = 0;
-   reg [31:0] rf_feat2 = 0;
-   reg [31:0] rf_feat3 = 0;
+   reg [4:0] rf_feature_addr = 0;
 
    reg [7:0] rf_tree_addr = 0;
    reg rf_start_pulse = 0;
@@ -432,26 +417,47 @@ HardwareConfig hwconfig(
    wire [31:0] rf_rdata;
 
    wire custom_rf_start;
-   wire custom_rf_feat0;
-   wire custom_rf_feat1;
-   wire custom_rf_feat2;
-   wire custom_rf_feat3;
+   wire custom_rf_feature;
    wire custom_rf_tmem;
 
-   assign custom_rf_start = custom_valid && (custom_funct3 == 3'b010);
-   assign custom_rf_feat0 = custom_valid && (custom_funct3 == 3'b011);
-   assign custom_rf_feat1 = custom_valid && (custom_funct3 == 3'b100);
-   assign custom_rf_feat2 = custom_valid && (custom_funct3 == 3'b101);
-   assign custom_rf_feat3 = custom_valid && (custom_funct3 == 3'b110);
-   assign custom_rf_tmem  = custom_valid && (custom_funct3 == 3'b111);
+   assign custom_rf_start =
+      custom_valid && (custom_funct3 == 3'b010);
+
+   assign custom_rf_feature =
+      custom_valid && (custom_funct3 == 3'b011);
+
+   assign custom_rf_tmem =
+      custom_valid && (custom_funct3 == 3'b111);
 
    assign custom_rdata =
-      (custom_funct3 == 3'b001) ? {31'b0, rf_ready} :
-                                 rf_result;
+      (custom_funct3 == 3'b001)
+         ? {31'b0, rf_ready}
+         : rf_result;
+
+   wire rf_feature_we;
+   wire [4:0] rf_feature_addr_mux;
+   wire [31:0] rf_feature_data_in;
+
+   assign rf_feature_we =
+      (
+         io_wstrb &&
+         io_word_address[IO_RF_DATA_bit] &&
+         (rf_reg_sel == RF_REG_FDATA)
+      ) || custom_rf_feature;
+
+   assign rf_feature_addr_mux =
+      custom_rf_feature
+         ? custom_rs1[4:0]
+         : rf_feature_addr;
+
+   assign rf_feature_data_in =
+      custom_rf_feature
+         ? custom_rs2
+         : io_wdata;
 
    wire rf_tree_we;
    wire [31:0] rf_tree_data_in;
-   wire [7:0]  rf_tree_addr_mux;
+   wire [7:0] rf_tree_addr_mux;
 
    assign rf_tree_we =
       (
@@ -461,51 +467,49 @@ HardwareConfig hwconfig(
       ) || custom_rf_tmem;
 
    assign rf_tree_data_in =
-      custom_rf_tmem ? custom_rs2 : io_wdata;
+      custom_rf_tmem
+         ? custom_rs2
+         : io_wdata;
 
    assign rf_tree_addr_mux =
-      custom_rf_tmem ? custom_rs1[7:0] : rf_tree_addr;
+      custom_rf_tmem
+         ? custom_rs1[7:0]
+         : rf_tree_addr;
 
    always @(posedge clk) begin
+
       rf_start_pulse <= 1'b0;
 
       if(!reset) begin
          rf_reg_sel <= 0;
-         rf_feat0 <= 0;
-         rf_feat1 <= 0;
-         rf_feat2 <= 0;
-         rf_feat3 <= 0;
+         rf_feature_addr <= 0;
          rf_tree_addr <= 0;
-      end else begin
-         if(io_wstrb && io_word_address[IO_RF_ADDR_bit]) begin
+      end
+      else begin
+         if(
+            io_wstrb &&
+            io_word_address[IO_RF_ADDR_bit]
+         ) begin
             rf_reg_sel <= io_wdata[3:0];
          end
 
-         if(io_wstrb && io_word_address[IO_RF_DATA_bit]) begin
+         if(
+            io_wstrb &&
+            io_word_address[IO_RF_DATA_bit]
+         ) begin
             case(rf_reg_sel)
-               RF_REG_FEAT0: rf_feat0 <= io_wdata;
-               RF_REG_FEAT1: rf_feat1 <= io_wdata;
-               RF_REG_FEAT2: rf_feat2 <= io_wdata;
-               RF_REG_FEAT3: rf_feat3 <= io_wdata;
-               RF_REG_TADDR: rf_tree_addr <= io_wdata[7:0];
-               RF_REG_START: rf_start_pulse <= 1'b1;
+               RF_REG_FADDR:
+                  rf_feature_addr <= io_wdata[4:0];
+
+               RF_REG_TADDR:
+                  rf_tree_addr <= io_wdata[7:0];
+
+               RF_REG_START:
+                  rf_start_pulse <= 1'b1;
+
+               default: begin
+               end
             endcase
-         end
-
-         if(custom_rf_feat0) begin
-            rf_feat0 <= custom_rs1;
-         end
-
-         if(custom_rf_feat1) begin
-            rf_feat1 <= custom_rs1;
-         end
-
-         if(custom_rf_feat2) begin
-            rf_feat2 <= custom_rs1;
-         end
-
-         if(custom_rf_feat3) begin
-            rf_feat3 <= custom_rs1;
          end
 
          if(custom_rf_start) begin
@@ -518,29 +522,35 @@ HardwareConfig hwconfig(
 
    always @(*) begin
       case(rf_reg_sel)
-         RF_REG_STATUS: rf_rdata_raw = {31'b0, rf_ready};
-         RF_REG_RESULT: rf_rdata_raw = rf_result;
-         RF_REG_FEAT0:  rf_rdata_raw = rf_feat0;
-         RF_REG_FEAT1:  rf_rdata_raw = rf_feat1;
-         RF_REG_FEAT2:  rf_rdata_raw = rf_feat2;
-         RF_REG_FEAT3:  rf_rdata_raw = rf_feat3;
-         RF_REG_TADDR:  rf_rdata_raw = {24'b0, rf_tree_addr};
-         default:       rf_rdata_raw = 32'b0;
+         RF_REG_STATUS:
+            rf_rdata_raw = {31'b0, rf_ready};
+
+         RF_REG_RESULT:
+            rf_rdata_raw = rf_result;
+
+         RF_REG_FADDR:
+            rf_rdata_raw = {27'b0, rf_feature_addr};
+
+         RF_REG_TADDR:
+            rf_rdata_raw = {24'b0, rf_tree_addr};
+
+         default:
+            rf_rdata_raw = 32'b0;
       endcase
    end
 
    assign rf_rdata =
-      io_word_address[IO_RF_DATA_bit] ? rf_rdata_raw : 32'b0;
+      io_word_address[IO_RF_DATA_bit]
+         ? rf_rdata_raw
+         : 32'b0;
 
-   random_forest rf_engine (
+   random_forest_vehicle rf_engine (
       .clk(clk),
       .reset(!reset),
 
-      .instruction(32'b0),
-      .x1(rf_feat0),
-      .x2(rf_feat1),
-      .x3(rf_feat2),
-      .x4(rf_feat3),
+      .feature_addr(rf_feature_addr_mux),
+      .feature_data_in(rf_feature_data_in),
+      .feature_we(rf_feature_we),
 
       .start(rf_start_pulse),
       .ready(rf_ready),
@@ -552,6 +562,7 @@ HardwareConfig hwconfig(
    );
 
 `endif
+
 
 
 /*********************** Debug registers for ILA ***********************/

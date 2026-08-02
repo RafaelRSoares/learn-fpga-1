@@ -1,0 +1,16 @@
+Exportação Vehicle para acelerador do César
+==========================================
+
+Árvores: 4
+Features: 18
+Amostras de teste: 169
+Palavras da floresta: 60
+
+Profundidades: [3, 3, 3, 3]
+Nós sklearn: [15, 15, 15, 13]
+
+Maior feature original: 982
+Maior feature x2: 1964
+
+Equivalência memória César x Python: 169/169
+Acurácia do modelo empacotado: 107/169 = 63.31%

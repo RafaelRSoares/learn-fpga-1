@@ -1,0 +1,73 @@
+#ifndef VEHICLE_FOREST_NODES_H
+#define VEHICLE_FOREST_NODES_H
+
+#include <stdint.h>
+
+#define VEHICLE_TREE_COUNT 4
+#define VEHICLE_NODES_PER_TREE 15
+#define VEHICLE_TOTAL_NODES 60
+
+static const uint32_t vehicle_forest_nodes[VEHICLE_TOTAL_NODES] = {
+    0x5AFC0000u,
+    0x28110000u,
+    0x280F0000u,
+    0x08530000u,
+    0x19020000u,
+    0x280D0000u,
+    0x00CF0000u,
+    0x00000000u,
+    0x00000200u,
+    0x00000000u,
+    0x00000000u,
+    0x00000200u,
+    0x00000200u,
+    0x00000300u,
+    0x00000100u,
+    0x5B010000u,
+    0x00AF0000u,
+    0x280F0000u,
+    0x40250000u,
+    0x194B0000u,
+    0x207D0000u,
+    0x00CF0000u,
+    0x00000000u,
+    0x00000200u,
+    0x00000000u,
+    0x00000200u,
+    0x00000200u,
+    0x00000200u,
+    0x00000300u,
+    0x00000100u,
+    0x194D0000u,
+    0x514B0000u,
+    0x49590000u,
+    0x00B50000u,
+    0x28110000u,
+    0x109B0000u,
+    0x89780000u,
+    0x00000300u,
+    0x00000000u,
+    0x00000200u,
+    0x00000000u,
+    0x00000200u,
+    0x00000100u,
+    0x00000200u,
+    0x00000300u,
+    0x40250000u,
+    0x00A30000u,
+    0x897D0000u,
+    0x00000300u,
+    0x78270000u,
+    0x08530000u,
+    0x280F0000u,
+    0x00000300u,
+    0x00000300u,
+    0x00000000u,
+    0x00000100u,
+    0x00000100u,
+    0x00000200u,
+    0x00000200u,
+    0x00000300u
+};
+
+#endif

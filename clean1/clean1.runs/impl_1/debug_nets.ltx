@@ -1,0 +1,647 @@
+{
+    "ltx_root": {
+        "version": 4,
+        "minor": 0,
+        "ltx_data": [
+            {
+                "name": "EDA_PROBESET",
+                "active": true,
+                "debug_cores": [
+                    {
+                        "type": "XSDB_V3",
+                        "name": "dbg_hub",
+                        "spec": "labtools_xsdbm_v3",
+                        "clk_input_freq_hz": "50000000"
+                    },
+                    {
+                        "type": "ILA_V3",
+                        "name": "rf_debug_ila",
+                        "spec": "labtools_ila_v6",
+                        "ipName": "ila",
+                        "core_location": {
+                            "user_chain": 1,
+                            "slave_index": 0,
+                            "bscan_switch_index": 0
+                        },
+                        "uuid": "35F224C06DCE556D85B8919AD35838DA",
+                        "pins": [
+                            {
+                                "name": "probe0",
+                                "id": 0,
+                                "type": "DATA_TRIGGER",
+                                "direction": "IN",
+                                "isVector": true,
+                                "leftIndex": 0,
+                                "rightIndex": 31,
+                                "portIndex": 0,
+                                "nets": [
+                                    {
+                                        "name": "dbg_sample",
+                                        "isBus": true,
+                                        "subnets": [
+                                            {
+                                                "name": "dbg_sample[31]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[30]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[29]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[28]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[27]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[26]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[25]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[24]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[23]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[22]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[21]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[20]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[19]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[18]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[17]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[16]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[15]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[14]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[13]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[12]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[11]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[10]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[9]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[8]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[7]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[6]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[5]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[4]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[3]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[2]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[1]"
+                                            },
+                                            {
+                                                "name": "dbg_sample[0]"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "probe1",
+                                "id": 1,
+                                "type": "DATA_TRIGGER",
+                                "direction": "IN",
+                                "isVector": true,
+                                "leftIndex": 0,
+                                "rightIndex": 31,
+                                "portIndex": 1,
+                                "nets": [
+                                    {
+                                        "name": "dbg_expected",
+                                        "isBus": true,
+                                        "subnets": [
+                                            {
+                                                "name": "dbg_expected[31]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[30]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[29]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[28]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[27]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[26]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[25]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[24]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[23]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[22]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[21]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[20]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[19]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[18]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[17]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[16]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[15]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[14]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[13]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[12]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[11]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[10]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[9]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[8]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[7]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[6]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[5]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[4]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[3]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[2]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[1]"
+                                            },
+                                            {
+                                                "name": "dbg_expected[0]"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "probe2",
+                                "id": 2,
+                                "type": "DATA_TRIGGER",
+                                "direction": "IN",
+                                "isVector": true,
+                                "leftIndex": 0,
+                                "rightIndex": 31,
+                                "portIndex": 2,
+                                "nets": [
+                                    {
+                                        "name": "dbg_pred",
+                                        "isBus": true,
+                                        "subnets": [
+                                            {
+                                                "name": "dbg_pred[31]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[30]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[29]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[28]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[27]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[26]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[25]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[24]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[23]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[22]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[21]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[20]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[19]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[18]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[17]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[16]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[15]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[14]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[13]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[12]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[11]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[10]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[9]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[8]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[7]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[6]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[5]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[4]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[3]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[2]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[1]"
+                                            },
+                                            {
+                                                "name": "dbg_pred[0]"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "probe3",
+                                "id": 3,
+                                "type": "DATA_TRIGGER",
+                                "direction": "IN",
+                                "isVector": true,
+                                "leftIndex": 0,
+                                "rightIndex": 31,
+                                "portIndex": 3,
+                                "nets": [
+                                    {
+                                        "name": "dbg_cycles",
+                                        "isBus": true,
+                                        "subnets": [
+                                            {
+                                                "name": "dbg_cycles[31]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[30]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[29]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[28]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[27]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[26]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[25]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[24]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[23]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[22]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[21]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[20]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[19]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[18]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[17]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[16]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[15]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[14]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[13]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[12]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[11]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[10]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[9]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[8]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[7]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[6]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[5]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[4]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[3]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[2]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[1]"
+                                            },
+                                            {
+                                                "name": "dbg_cycles[0]"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "probe4",
+                                "id": 4,
+                                "type": "DATA_TRIGGER",
+                                "direction": "IN",
+                                "isVector": true,
+                                "leftIndex": 0,
+                                "rightIndex": 31,
+                                "portIndex": 4,
+                                "nets": [
+                                    {
+                                        "name": "dbg_correct",
+                                        "isBus": true,
+                                        "subnets": [
+                                            {
+                                                "name": "dbg_correct[31]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[30]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[29]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[28]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[27]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[26]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[25]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[24]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[23]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[22]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[21]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[20]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[19]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[18]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[17]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[16]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[15]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[14]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[13]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[12]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[11]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[10]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[9]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[8]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[7]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[6]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[5]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[4]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[3]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[2]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[1]"
+                                            },
+                                            {
+                                                "name": "dbg_correct[0]"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "probe5",
+                                "id": 5,
+                                "type": "DATA_TRIGGER",
+                                "direction": "IN",
+                                "isVector": false,
+                                "leftIndex": 0,
+                                "rightIndex": 0,
+                                "portIndex": 5,
+                                "nets": [
+                                    {
+                                        "name": "dbg_pulse",
+                                        "isBus": false
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "probe6",
+                                "id": 6,
+                                "type": "DATA_TRIGGER",
+                                "direction": "IN",
+                                "isVector": true,
+                                "leftIndex": 0,
+                                "rightIndex": 2,
+                                "portIndex": 6,
+                                "nets": [
+                                    {
+                                        "name": "custom_funct3",
+                                        "isBus": true,
+                                        "subnets": [
+                                            {
+                                                "name": "custom_funct3[2]"
+                                            },
+                                            {
+                                                "name": "custom_funct3[1]"
+                                            },
+                                            {
+                                                "name": "custom_funct3[0]"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,17 @@
+Quantidade de features: 18
+Quantidade de árvores: 4
+Profundidade máxima: 3
+Random state: 42
+Acurácia: 0.680473
+
+              precision    recall  f1-score   support
+
+         van     0.7170    0.9500    0.8172        40
+        saab     0.5909    0.2955    0.3939        44
+         bus     0.7593    0.9535    0.8454        43
+        opel     0.5750    0.5476    0.5610        42
+
+    accuracy                         0.6805       169
+   macro avg     0.6605    0.6866    0.6544       169
+weighted avg     0.6596    0.6805    0.6505       169
+
